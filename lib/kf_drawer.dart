@@ -38,6 +38,7 @@ class KFDrawer extends StatefulWidget {
     this.scrollable,
     this.menuPadding,
     this.disableContentTap,
+    this.animationDuration,
   }) : super(key: key);
 
   Widget header;
@@ -53,6 +54,7 @@ class KFDrawer extends StatefulWidget {
   bool scrollable;
   EdgeInsets menuPadding;
   bool disableContentTap;
+  Duration animationDuration;
 
   @override
   _KFDrawerState createState() => _KFDrawerState();
@@ -69,6 +71,7 @@ class _KFDrawerState extends State<KFDrawer> with TickerProviderStateMixin {
   double _shadowOffset = 16.0;
   bool _scrollable = false;
   bool _disableContentTap = true;
+  Duration _animationDuration = Duration(milliseconds: 260);
 
   Animation<double> animation, scaleAnimation;
   Animation<BorderRadius> radiusAnimation;
@@ -113,6 +116,7 @@ class _KFDrawerState extends State<KFDrawer> with TickerProviderStateMixin {
   List<KFDrawerItem> _getDrawerItems() {
     if (widget.controller.items != null) {
       return widget.controller.items.map((KFDrawerItem item) {
+        if (item.page == null) return item;
         if (item.onPressed == null) {
           item.onPressed = () {
             widget.controller.page = item.page;
@@ -150,7 +154,10 @@ class _KFDrawerState extends State<KFDrawer> with TickerProviderStateMixin {
     if (widget.disableContentTap != null) {
       _disableContentTap = widget.disableContentTap;
     }
-    animationController = AnimationController(duration: const Duration(milliseconds: 300), vsync: this);
+    if (widget.animationDuration != null) {
+      _animationDuration = widget.animationDuration;
+    }
+    animationController = AnimationController(duration: _animationDuration, vsync: this);
     animation = Tween<double>(begin: 0.0, end: 1.0).animate(animationController)
       ..addListener(() {
         setState(() {
@@ -306,10 +313,11 @@ class __KFDrawerState extends State<_KFDrawer> {
             child: widget.header,
           ),
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: widget.items,
           ),
           widget.footer,
+          SizedBox(height: 50,)
         ],
       );
     } else {
@@ -320,11 +328,12 @@ class __KFDrawerState extends State<_KFDrawer> {
           ),
           Expanded(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: widget.items,
             ),
           ),
           widget.footer,
+          SizedBox(height: 50,)
         ],
       );
     }
@@ -375,7 +384,7 @@ class KFDrawerItem extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Container(
-                  padding: EdgeInsets.only(left: 16.0, right: 8.0),
+                  padding: EdgeInsets.only(left: 40.0, right: 8.0),
                   child: icon,
                 ),
                 text,
