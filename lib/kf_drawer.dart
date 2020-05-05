@@ -68,7 +68,7 @@ class _KFDrawerState extends State<KFDrawer> with TickerProviderStateMixin {
   double _minScale = 0.86;
   double _borderRadius = 32.0;
   double _shadowBorderRadius = 44.0;
-  double _shadowOffset = 16.0;
+  double _shadowOffset = 0.0;
   bool _scrollable = false;
   bool _disableContentTap = true;
   Duration _animationDuration = Duration(milliseconds: 260);
